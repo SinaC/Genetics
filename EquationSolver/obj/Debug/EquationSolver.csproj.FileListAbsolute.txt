@@ -1,8 +1,0 @@
-D:\GitHub\Genetics\EquationSolver\bin\Debug\EquationSolver.exe.config
-D:\GitHub\Genetics\EquationSolver\bin\Debug\EquationSolver.exe
-D:\GitHub\Genetics\EquationSolver\bin\Debug\EquationSolver.pdb
-D:\GitHub\Genetics\EquationSolver\bin\Debug\Genetics.dll
-D:\GitHub\Genetics\EquationSolver\bin\Debug\Genetics.pdb
-D:\GitHub\Genetics\EquationSolver\obj\Debug\EquationSolver.csprojResolveAssemblyReference.cache
-D:\GitHub\Genetics\EquationSolver\obj\Debug\EquationSolver.exe
-D:\GitHub\Genetics\EquationSolver\obj\Debug\EquationSolver.pdb
