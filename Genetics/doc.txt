@@ -1,0 +1,9 @@
+﻿http://www.anotherchris.net/csharp/introduction-to-genetic-algorithms-in-csharp/
+http://www.codeproject.com/Articles/26203/Genetic-Algorithm-Library#Example1:<em>findingminimumoff(x,y)=5*x*sin(x)+1.1*y*sin(y);x,yininterval(0,10)</em>20
+http://visualstudiomagazine.com/articles/2014/02/01/evolutionary-optimization-using-c.aspx
+http://visualstudiomagazine.com/articles/2013/09/01/neural-network-training-using-back-propagation.aspx
+http://visualstudiomagazine.com/articles/2013/12/01/neural-network-training-using-particle-swarm-optimization.aspx
+http://geneticprogramming.us/Selection.html
+
+
+http://doublezoom.free.fr/programmation/AG_Exemple_Fighting.php

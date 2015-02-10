@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genetics", "Genetics\Genetics.csproj", "{8B603561-BCAA-40FF-84EF-40AB83680B36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquationSolver", "EquationSolver\EquationSolver.csproj", "{AD3A5B87-2F5A-407C-8905-0B3B64F3962A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B603561-BCAA-40FF-84EF-40AB83680B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B603561-BCAA-40FF-84EF-40AB83680B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B603561-BCAA-40FF-84EF-40AB83680B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B603561-BCAA-40FF-84EF-40AB83680B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD3A5B87-2F5A-407C-8905-0B3B64F3962A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD3A5B87-2F5A-407C-8905-0B3B64F3962A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD3A5B87-2F5A-407C-8905-0B3B64F3962A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD3A5B87-2F5A-407C-8905-0B3B64F3962A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

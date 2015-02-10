@@ -1,0 +1,5 @@
+D:\GitHub\Genetics\Genetics\bin\Debug\Genetics.dll
+D:\GitHub\Genetics\Genetics\bin\Debug\Genetics.pdb
+D:\GitHub\Genetics\Genetics\obj\Debug\Genetics.csprojResolveAssemblyReference.cache
+D:\GitHub\Genetics\Genetics\obj\Debug\Genetics.dll
+D:\GitHub\Genetics\Genetics\obj\Debug\Genetics.pdb
