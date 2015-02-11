@@ -4,6 +4,9 @@ http://visualstudiomagazine.com/articles/2014/02/01/evolutionary-optimization-us
 http://visualstudiomagazine.com/articles/2013/09/01/neural-network-training-using-back-propagation.aspx
 http://visualstudiomagazine.com/articles/2013/12/01/neural-network-training-using-particle-swarm-optimization.aspx
 http://geneticprogramming.us/Selection.html
+http://www.obitko.com/tutorials/genetic-algorithms/crossover-mutation.php
 
+linear equations solving
+http://www.ijcaonline.org/volume14/number8/pxc3872534.pdf
 
 http://doublezoom.free.fr/programmation/AG_Exemple_Fighting.php

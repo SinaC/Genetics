@@ -18,19 +18,20 @@ namespace Genetics.Selection
             Tau = tau;
         }
 
-        public List<ChromosomeBase<T>> Select(List<ChromosomeBase<T>> population, int selectionCount)
+        public IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount)
         {
             if (population == null)
                 throw new ArgumentNullException("population");
-            if (selectionCount <= 0 || selectionCount > population.Count)
+            ChromosomeBase<T>[] chromosomeBases = population as ChromosomeBase<T>[] ?? population.ToArray();
+            if (selectionCount <= 0 || selectionCount > chromosomeBases.Length)
                 throw new ArgumentNullException("selectionCount", "selectionCount must be between 1 and population count");
 
-            int popSize = population.Count;
+            int popSize = chromosomeBases.Length;
             int[] indexes = new int[popSize];
-            for (int i = 0; i < indexes.Length; ++i)
+            for (int i = 0; i < indexes.Length; i++)
                 indexes[i] = i;
 
-            for (int i = 0; i < indexes.Length; ++i) // shuffle
+            for (int i = 0; i < indexes.Length; i++) // shuffle
             {
                 int r = Singleton.Random.Next(i, indexes.Length);
                 int tmp = indexes[r]; indexes[r] = indexes[i]; indexes[i] = tmp;
@@ -40,10 +41,11 @@ namespace Genetics.Selection
             int tournamentSize = (int)(Tau * popSize);
             if (tournamentSize < selectionCount)
                 tournamentSize = selectionCount;
-            
+
+            // TODO: Could use partial select sort instead of a full sort, see Elitist
             ChromosomeBase<T>[] candidates = new ChromosomeBase<T>[tournamentSize];
-            for (int i = 0; i < tournamentSize; ++i)
-                candidates[i] = population[indexes[i]];
+            for (int i = 0; i < tournamentSize; i++)
+                candidates[i] = chromosomeBases[indexes[i]];
             Array.Sort(candidates);
 
             //

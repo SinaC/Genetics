@@ -9,43 +9,30 @@ namespace Genetics.Selection
     public class FitnessProportionate<T> : ISelection<T>
         where T:struct 
     {
-        public List<ChromosomeBase<T>> Select(List<ChromosomeBase<T>> population, int selectionCount)
+        public IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount)
         {
             if (population == null)
                 throw new ArgumentNullException("population");
-            if (selectionCount <= 0 || selectionCount > population.Count)
+            ChromosomeBase<T>[] chromosomeBases = population as ChromosomeBase<T>[] ?? population.ToArray();
+            if (selectionCount <= 0 || selectionCount > chromosomeBases.Length)
                 throw new ArgumentNullException("selectionCount", "selectionCount must be between 1 and population count");
 
-            double maxFitness = population.Max(x => x.Fitness);
-            int popSize = population.Count;
-            int lastSelected = 0;
-            int[] selectedIndices = new int[selectionCount];
+            double maxFitness = chromosomeBases.Max(x => x.Fitness);
+            int popSize = chromosomeBases.Length;
+            HashSet<int> selectedIndices = new HashSet<int>();
             for (int i = 0; i < selectionCount; i++)
             {
                 while (true)
                 {
                     int index = Singleton.Random.Next(popSize);
-                    bool isAlreadySelected = false;
-                    for (int alreadySelectedIndex = 0; alreadySelectedIndex < lastSelected; alreadySelectedIndex++)
-                        if (selectedIndices[alreadySelectedIndex] == index)
-                        {
-                            isAlreadySelected = true;
-                            break;
-                        }
-                    if (isAlreadySelected)
+                    if (selectedIndices.Contains(index))
                         continue;
-                    ChromosomeBase<T> candidate = population[index];
+                    ChromosomeBase<T> candidate = chromosomeBases[index];
                     if (Singleton.Random.NextDouble() * maxFitness < candidate.Fitness)
-                    {
-                        selectedIndices[lastSelected] = index;
-                        lastSelected++;
-                        break;
-                    }
+                        selectedIndices.Add(index);
                 }
             }
-            List<ChromosomeBase<T>> results = new List<ChromosomeBase<T>>(selectionCount);
-            for (int i = 0; i < selectionCount; i++)
-                results.Add(population[selectedIndices[i]]);
+            List<ChromosomeBase<T>> results = selectedIndices.Select(index => chromosomeBases[index]).ToList();
             return results;
         }
     }

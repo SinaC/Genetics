@@ -10,30 +10,31 @@ namespace Genetics.Selection
         where T:struct
     {
         //http://en.wikipedia.org/wiki/Selection_algorithm#Partial_selection_sort
-        public List<ChromosomeBase<T>> Select(List<ChromosomeBase<T>> population, int selectionCount)
+        public IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount)
         {
             if (population == null)
                 throw new ArgumentNullException("population");
-            if (selectionCount <= 0 || selectionCount > population.Count)
+            ChromosomeBase<T>[] chromosomeBases = population as ChromosomeBase<T>[] ?? population.ToArray();
+            if (selectionCount <= 0 || selectionCount > chromosomeBases.Length)
                 throw new ArgumentNullException("selectionCount", "selectionCount must be between 1 and population count");
 
             for(int i = 0; i < selectionCount; i++)
             {
                 int minIndex = i;
-                double minValue = population[i].Fitness;
+                double minValue = chromosomeBases[i].Fitness;
                 // search the best in remaining items
-                for(int j = i+1; j < population.Count; j++)
-                    if (population[j].Fitness < minValue)
+                for(int j = i+1; j < chromosomeBases.Length; j++)
+                    if (chromosomeBases[j].Fitness < minValue)
                     {
                         minIndex = j;
-                        minValue = population[j].Fitness;
+                        minValue = chromosomeBases[j].Fitness;
                     }
                 // save best
-                ChromosomeBase<T> temp = population[i];
-                population[i] = population[minIndex];
-                population[minIndex] = temp;
+                ChromosomeBase<T> temp = chromosomeBases[i];
+                chromosomeBases[i] = chromosomeBases[minIndex];
+                chromosomeBases[minIndex] = temp;
             }
-            return population.Take(selectionCount).ToList();
+            return chromosomeBases.Take(selectionCount).ToList();
         }
     }
 }

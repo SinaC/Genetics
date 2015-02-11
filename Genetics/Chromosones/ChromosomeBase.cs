@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Genetics.Chromosones
 {
@@ -65,6 +66,11 @@ namespace Genetics.Chromosones
             else
                 offspring.GeneArray[gene] = parent3.GeneArray[gene];
             offspring._isDirty = true;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Fitness: {0:F6} Genes: {1}", Fitness, GeneArray.Select(g => g.ToString()).Aggregate((s1, s2) => s1 + "," + s2));
         }
 
         #region IComparable<T>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Genetics.Chromosones;
 using Genetics.CrossOver;
 using Genetics.Mutation;
@@ -51,27 +52,34 @@ namespace Genetics.Solver
                 _population.Add(chromosome);
             }
 
+            // TODO: no need to sort, partial selection (see elitist selection) could be used to find 3 worst candidates
+
             // Solve
             while (true)
             {
                 if (Generation%200 == 0)
                 {
                     System.Diagnostics.Debug.WriteLine("Generation = " + Generation);
-                    System.Diagnostics.Debug.WriteLine("Best error = " + (best == null ? 0 : best.Fitness).ToString("F6"));
+                    System.Diagnostics.Debug.WriteLine("Best = " + (best == null ? "none" : best.ToString()));
+                    foreach(ChromosomeBase<T> chromosome in _population)
+                        System.Diagnostics.Debug.WriteLine(chromosome);
                 }
 
                 // Select
-                List<ChromosomeBase<T>> parents = _selection.Select(_population, 2);
+                List<ChromosomeBase<T>> parents = _selection.Select(_population, 2).ToList();
                 // Reproduce
                 ChromosomeBase<T> offspring1, offspring2;
                 Reproduce(parents, out offspring1, out offspring2);
                 // Replace 2 worst chromosomes with new offsprings
                 _population.Sort();
+                //System.Diagnostics.Debug.WriteLine("Offspring1 "+offspring1+" replacing " + _population[_population.Count - 1]);
                 _population[_population.Count - 1] = offspring1;
+               // System.Diagnostics.Debug.WriteLine("Offspring2 "+offspring2 + " replacing " + _population[_population.Count - 2]);
                 _population[_population.Count - 2] = offspring2;
                 // Replace 3rd worst chromosome with a new one
                 ChromosomeBase<T> freshFlesh = _generateChromosomeFunc(geneCount);
                 freshFlesh.Randomize();
+                //System.Diagnostics.Debug.WriteLine("Fresh flesh "+freshFlesh + " replacing " + _population[_population.Count - 3]);
                 _population[_population.Count - 3] = freshFlesh;
 
                 // Check if any of 3 new chromosomes is better than current best

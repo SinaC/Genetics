@@ -32,21 +32,18 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chromosones\ChromosomeBit.cs" />
     <Compile Include="Chromosones\ChromosomeBase.cs" />
     <Compile Include="Chromosones\ChromosomeDouble.cs" />
+    <Compile Include="Chromosones\ChromosomeInt.cs" />
     <Compile Include="CrossOver\ICrossOver.cs" />
     <Compile Include="CrossOver\OnePoint.cs" />
     <Compile Include="CrossOver\ThreeParents.cs" />
     <Compile Include="CrossOver\TwoPoints.cs" />
     <Compile Include="CrossOver\Uniform.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Mutation\IMutation.cs" />
     <Compile Include="Mutation\ProbabilityMutate.cs" />
     <Compile Include="Mutation\NormalizedMutate.cs" />
