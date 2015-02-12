@@ -9,7 +9,7 @@ namespace Genetics.Selection
     public class StochasticUniversalSampling<T> : ISelection<T>
         where T:struct 
     {
-        public IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount)
+        public IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount, bool isPopulationSorted = false)
         {
             throw new NotImplementedException();
         }

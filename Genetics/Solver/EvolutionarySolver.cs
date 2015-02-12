@@ -20,6 +20,11 @@ namespace Genetics.Solver
 
         public int Generation { get; private set; }
 
+        public IEnumerable<ChromosomeBase<T>> Population
+        {
+            get { return _population; }
+        }
+
         public EvolutionarySolver(Func<int, ChromosomeBase<T>> generateChromosomeFunc, ISelection<T> selection, ICrossOver<T> crossOver, IMutation<T> mutation)
         {
             if (generateChromosomeFunc == null)
@@ -31,12 +36,16 @@ namespace Genetics.Solver
             _mutation = mutation;
         }
 
-        public ChromosomeBase<T> Solve(int geneCount, int populationCount, int maxGenerations, double exitFitness)
+        public ChromosomeBase<T> Solve(int geneCount, int populationCount, int breedCount, int maxGenerations, double exitFitness)
         {
             if (geneCount <= 0)
                 throw new ArgumentOutOfRangeException("geneCount", "geneCount must be strictly positive");
             if (populationCount <= 0)
                 throw new ArgumentOutOfRangeException("populationCount", "populationCount must be strictly positive");
+            if (breedCount <= 0)
+                throw new ArgumentOutOfRangeException("breedCount", "breedCount must be strictly positive");
+            if (2*breedCount > populationCount-1)
+                throw new ArgumentOutOfRangeException("breedCount", "breedCount must be strictly lower than half populationCount");
             if (maxGenerations <= 0)
                 throw new ArgumentOutOfRangeException("maxGenerations", "maxGenerations must be strictly positive");
 
@@ -48,11 +57,9 @@ namespace Genetics.Solver
             {
                 ChromosomeBase<T> chromosome = _generateChromosomeFunc(geneCount);
                 chromosome.Randomize();
-                UpdateBest(ref best, chromosome);
+                best = UpdateBest(best, chromosome);
                 _population.Add(chromosome);
             }
-
-            // TODO: no need to sort, partial selection (see elitist selection) could be used to find 3 worst candidates
 
             // Solve
             while (true)
@@ -65,25 +72,43 @@ namespace Genetics.Solver
                         System.Diagnostics.Debug.WriteLine(chromosome);
                 }
 
-                // Select
-                List<ChromosomeBase<T>> parents = _selection.Select(_population, 2).ToList();
-                // Reproduce
-                ChromosomeBase<T> offspring1, offspring2;
-                Reproduce(parents, out offspring1, out offspring2);
-                // Replace 2 worst chromosomes with new offsprings
+                // Sort on Fitness, worst chromosome are at the end of population
                 _population.Sort();
-                //System.Diagnostics.Debug.WriteLine("Offspring1 "+offspring1+" replacing " + _population[_population.Count - 1]);
-                _population[_population.Count - 1] = offspring1;
-               // System.Diagnostics.Debug.WriteLine("Offspring2 "+offspring2 + " replacing " + _population[_population.Count - 2]);
-                _population[_population.Count - 2] = offspring2;
-                // Replace 3rd worst chromosome with a new one
+                 
+                // Generate offsprings replacing worst chromosomes
+                //  position 0: fresh flesh
+                //  position 1: offspring1 (offspring of parent1 and parent2)
+                //  position 2: offspring2 (offspring of parent1 and parent2)
+                //  position 3: offspring3 (offspring of parent3 and parent4)
+                //  position 4: offspring4 (offspring of parent3 and parent4)
+                //  etc...
+                int offspringCount = 2*breedCount+1; // +1 for fresh flesh
+                ChromosomeBase<T>[] offsprings = new ChromosomeBase<T>[offspringCount]; // offsprings are stored to optimize best search (avoid looping on whole population)
+                // Fresh flesh
                 ChromosomeBase<T> freshFlesh = _generateChromosomeFunc(geneCount);
                 freshFlesh.Randomize();
-                //System.Diagnostics.Debug.WriteLine("Fresh flesh "+freshFlesh + " replacing " + _population[_population.Count - 3]);
-                _population[_population.Count - 3] = freshFlesh;
+                offsprings[0] = freshFlesh;
+                _population[_population.Count - 1] = offsprings[0]; // replace worst chromosome
+                //System.Diagnostics.Debug.WriteLine("fresh -> 0 -> {0}", _population.Count - 1);
 
-                // Check if any of 3 new chromosomes is better than current best
-                UpdateBest(ref best, offspring1, offspring2, freshFlesh);
+                // Select
+                ChromosomeBase<T>[] parents = _selection.Select(_population, 2*breedCount).ToArray();
+                // Breed by pairs
+                for (int i = 0; i < breedCount; i++)
+                {
+                    ChromosomeBase<T> offspring1, offspring2;
+                    Breed(parents.Skip(2*i).Take(2), out offspring1, out offspring2);
+                    offsprings[1 + i*2] = offspring1; // 1 + because fresh flesh has been set on position 0
+                    offsprings[1 + i*2 + 1] = offspring2;
+                    // Replace worst chromosome
+                    _population[_population.Count - 2 - i*2] = offspring1;
+                    _population[_population.Count - 2 - i*2 - 1] = offspring2;
+                    //System.Diagnostics.Debug.WriteLine("{0} -> {1} -> {2}", i*2, 1 + i*2, _population.Count - 2 - i*2);
+                    //System.Diagnostics.Debug.WriteLine("{0} -> {1} -> {2}", i*2 + 1, 1 + i*2 + 1, _population.Count - 2 - i*2 - 1);
+                }
+
+                // Check if any new chromosomes is better than current best
+                best = UpdateBest(best, offsprings);
 
                 if (best != null && best.Fitness < exitFitness)
                     break;
@@ -96,18 +121,24 @@ namespace Genetics.Solver
             return best;
         }
 
-        private static void UpdateBest(ref ChromosomeBase<T> best, params ChromosomeBase<T>[] chromosomes)
+        private static ChromosomeBase<T> UpdateBest(ChromosomeBase<T> best, params ChromosomeBase<T>[] chromosomes)
         {
+            if (chromosomes == null || chromosomes.Length == 0)
+                return best;
             foreach (ChromosomeBase<T> chromosome in chromosomes)
                 if (best == null || chromosome.Fitness < best.Fitness)
                     best = chromosome;
+            return best;
         }
 
-        // Reproduce 2 chromosomes (crossover + mutation)
-        private void Reproduce(List<ChromosomeBase<T>> parents, out ChromosomeBase<T> offspring1, out ChromosomeBase<T> offspring2)
+        // Breed 2 chromosomes (crossover + mutation)
+        private void Breed(IEnumerable<ChromosomeBase<T>> parents, out ChromosomeBase<T> offspring1, out ChromosomeBase<T> offspring2)
         {
             // Crossover
-            List<ChromosomeBase<T>> offsprings = _crossOver.CrossOver(parents);
+            ChromosomeBase<T>[] offsprings = _crossOver.CrossOver(parents).ToArray();
+
+            if (offsprings.Length != 2)
+                throw new ApplicationException("Invalid CrossOver operator: number of offsprings must be 2");
             
             // Mutation
             _mutation.Mutate(offsprings[0]);

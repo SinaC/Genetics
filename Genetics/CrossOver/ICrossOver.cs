@@ -6,6 +6,6 @@ namespace Genetics.CrossOver
     public interface ICrossOver<T>
         where T:struct
     {
-        List<ChromosomeBase<T>> CrossOver(List<ChromosomeBase<T>> parents);
+        IEnumerable<ChromosomeBase<T>> CrossOver(IEnumerable<ChromosomeBase<T>> parents);
     }
 }

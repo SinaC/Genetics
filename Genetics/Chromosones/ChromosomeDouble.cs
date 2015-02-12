@@ -30,7 +30,7 @@ namespace Genetics.Chromosones
             double hi = MutationMagnitude * (Max-Min);
             double lo = -hi;
             double delta = (hi - lo) * Singleton.Random.NextDouble() + lo;
-            GeneArray[gene] += delta;
+            GeneArray[gene] = (GeneArray[gene]+delta).Clamp(Min, Max);
 
             System.Diagnostics.Debug.Assert(GeneArray[gene] >= Min && GeneArray[gene] <= Max);
         }

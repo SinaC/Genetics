@@ -6,6 +6,6 @@ namespace Genetics.Selection
     public interface ISelection<T>
         where T:struct
     {
-        IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount);
+        IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount, bool isPopulationSorted = false);
     }
 }

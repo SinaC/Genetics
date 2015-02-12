@@ -18,17 +18,18 @@ namespace Genetics.CrossOver
             MixingRatio = mixingRatio;
         }
 
-        public List<ChromosomeBase<T>> CrossOver(List<ChromosomeBase<T>> parents)
+        public IEnumerable<ChromosomeBase<T>> CrossOver(IEnumerable<ChromosomeBase<T>> parents)
         {
             if (parents == null)
                 throw new ArgumentNullException("parents");
-            if (parents.Count != 2)
+            ChromosomeBase<T>[] chromosomeBases = parents as ChromosomeBase<T>[] ?? parents.ToArray();
+            if (chromosomeBases.Length != 2)
                 throw new ArgumentOutOfRangeException("parents", "Uniform crossover must be used with 2 parents");
-            if (parents.Any(p => p.GeneCount != parents[0].GeneCount))
+            if (chromosomeBases.Any(p => p.GeneCount != chromosomeBases[0].GeneCount))
                 throw new ArgumentException("Every parents must have the same number of genes", "parents");
 
-            ChromosomeBase<T> offspring1 = parents[0].Clone();
-            ChromosomeBase<T> offspring2 = parents[1].Clone();
+            ChromosomeBase<T> offspring1 = chromosomeBases[0].Clone();
+            ChromosomeBase<T> offspring2 = chromosomeBases[1].Clone();
 
             // for each gene, check probability and swap if needed
             for (int gene = 0; gene < offspring1.GeneCount; gene++)

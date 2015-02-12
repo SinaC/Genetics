@@ -9,7 +9,7 @@ namespace Genetics.Selection
     public class Bogo<T> : ISelection<T>
         where T:struct 
     {
-        public IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount)
+        public IEnumerable<ChromosomeBase<T>> Select(IEnumerable<ChromosomeBase<T>> population, int selectionCount, bool isPopulationSorted = false)
         {
             if (population == null)
                 throw new ArgumentNullException("population");
@@ -17,12 +17,8 @@ namespace Genetics.Selection
             if (selectionCount <= 0 || selectionCount > chromosomeBases.Length)
                 throw new ArgumentNullException("selectionCount", "selectionCount must be between 1 and population count");
 
-            List<int> randomIndexes = Singleton.Random.GenerateRandom(2, 0, chromosomeBases.Length);
-            List<ChromosomeBase<T>> results = new List<ChromosomeBase<T>>
-                {
-                    chromosomeBases[randomIndexes[0]],
-                    chromosomeBases[randomIndexes[1]]
-                };
+            List<int> randomIndexes = Singleton.Random.GenerateRandom(selectionCount, 0, chromosomeBases.Length);
+            List<ChromosomeBase<T>> results = randomIndexes.Select(i => chromosomeBases[i]).ToList();
             return results;
             ////TODO: http://stackoverflow.com/questions/2394246/algorithm-to-select-a-single-random-combination-of-values/2394292#2394292   Communications of the ACM, September 1987, Volume 30, Number 9
             ////TODO: http://codereview.stackexchange.com/questions/61338/generate-random-numbers-without-repetitions/61809#61809

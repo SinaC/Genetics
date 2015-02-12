@@ -12,40 +12,34 @@ namespace EquationSolver
     {
         static void Main(string[] args)
         {
-            //ISelection<double> selection = new Tournament<double>(0.4);
-            ////ISelection<double> selection = new Bogo<double>();
-            ////ISelection<double> selection = new Elitist<double>();
-            ////ICrossOver<double> crossOver = new OnePoint<double>(3);
-            //ICrossOver<double> crossOver = new Uniform<double>(0.5);
-            //IMutation<double> mutation = new ProbabilityMutate<double>(0.2);
+            ISelection<double> selection = new Tournament<double>(0.4);
+            //ISelection<double> selection = new Bogo<double>();
+            //ISelection<double> selection = new Elitist<double>();
+            //ICrossOver<double> crossOver = new OnePoint<double>(3);
+            ICrossOver<double> crossOver = new Uniform<double>(0.5);
+            IMutation<double> mutation = new ProbabilityMutate<double>(0.2);
 
-            //EvolutionarySolver<double> solver = new EvolutionarySolver<double>(
-            //    geneCount => new ChromosomeDouble(geneCount, HyperSphereMinimumVolume, -10, 10, 0.1),
-            //    selection,
-            //    crossOver,
-            //    mutation);
-            //ChromosomeBase<double> best = solver.Solve(6, 50, 50000, 0.00001);
-
-            //ISelection<int> selection = new Tournament<int>(0.4);
-            //ISelection<int> selection = new Bogo<int>();
-            ISelection<int> selection = new Elitist<int>();
-            ICrossOver<int> crossOver = new Uniform<int>(0.5);
-            //ICrossOver<int> crossOver = new OnePoint<int>(1);
-            IMutation<int> mutation = new ProbabilityMutate<int>(0.2);
-
-            //EvolutionarySolver<int> solver = new EvolutionarySolver<int>(
-            //    geneCount => new ChromosomeInt(geneCount, LinearEquations, 0, 20, 0.2),
-            //    selection,
-            //    crossOver,
-            //    mutation);
-            //ChromosomeBase<int> best = solver.Solve(3, 50, 50000, 0.00001);
-
-            EvolutionarySolver<int> solver = new EvolutionarySolver<int>(
-                geneCount => new ChromosomeInt(geneCount, DiophantineEquation, -300, 300, 0.01),
+            EvolutionarySolver<double> solver = new EvolutionarySolver<double>(
+                geneCount => new ChromosomeDouble(geneCount, HyperSphereMinimumVolume, -50, 50, 0.01),
                 selection,
                 crossOver,
                 mutation);
-            ChromosomeBase<int> best = solver.Solve(2, 500, 50000, 0.00001);
+            ChromosomeBase<double> best = solver.Solve(10, 50, 20, 50000, 0.00001);
+
+            //ISelection<int> selection = new Tournament<int>(0.4);
+            ////ISelection<int> selection = new Bogo<int>();
+            ////ISelection<int> selection = new Elitist<int>();
+            //ICrossOver<int> crossOver = new Uniform<int>(0.5);
+            ////ICrossOver<int> crossOver = new OnePoint<int>(1);
+            ////IMutation<int> mutation = new NormalizedMutate<int>();
+            //IMutation<int> mutation = new ProbabilityMutate<int>(0.2);
+
+            //EvolutionarySolver<int> solver = new EvolutionarySolver<int>(
+            //    geneCount => new ChromosomeInt(geneCount, DiophantineEquation2, -300, 300, 0.01),
+            //    selection,
+            //    crossOver,
+            //    mutation);
+            //ChromosomeBase<int> best = solver.Solve(2, 50, 20, 50000, 0.00001);
         }
 
         // Minimum volume of hyper-sphere
@@ -57,7 +51,7 @@ namespace EquationSolver
             return Math.Abs(trueMin - z);
         }
 
-        static double DiophantineEquation(ChromosomeBase<int> chromosome)
+        static double DiophantineEquation2(ChromosomeBase<int> chromosome)
         {
             // 1027*x+712y=1  -> -165, 238
             int[] genes = chromosome.Genes.ToArray();
